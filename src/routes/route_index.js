@@ -4,7 +4,7 @@ const routes = [
     {
         method: 'GET',
         url: '/api/employee',
-        handler: employeeController.getEmployee
+        handler: employeeController.getEmployees
     },
     {
         method: 'GET',

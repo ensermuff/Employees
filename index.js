@@ -6,14 +6,6 @@ const app = require('fastify')({
 //bring in routes
 const routes = require('./src/routes/route_index')
 
-// Database - Import "mongoose"
-const mongoose = require("mongoose")
-
-// DB connection
-mongoose.connect('mongodb://localhost/employees')
-    .then(() => console.log("MONGO is ready!!"))
-    .catch(err => console.log(err))
-
 
 // Declare a route
 app.get('/', async (req, reply) => {
