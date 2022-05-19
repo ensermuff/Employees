@@ -1,10 +1,6 @@
-require('../src/controllers/employeeController');
-require('supertest');
-require('../index');
 const AWS = require('aws-sdk')
 const sinon = require('sinon')
-const config = require("../../config")
-const {v4: uuidv4} = require("uuid");
+const config = require("../../../config")
 AWS.config.update(config.aws_remote_config)
 
 
@@ -25,13 +21,15 @@ describe('controllerService', () => {
                 ':i': id
             }
         }
-        const reply = client.query(params, function (err, data) {
+        client.query(params, function (err, data) {
             if (err) {
                 console.log(err)
             } else {
                 console.log('data', data)
                 const {Items} = data
-                return Items
+                // Checks to see if the JSON object contains an attribute name
+                // with the value of Jerry Smith
+                expect(Items).toHaveProperty('name', "Jerry Smith")
             }
         })
     })

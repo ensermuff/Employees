@@ -3,7 +3,7 @@ const { v4:uuidv4 } = require('uuid')
 // import the aws sdk to use the dynamodb libraries
 const AWS = require('aws-sdk')
 // update the region to where dynamodb is hosted
-const config = require("../../../config")
+const config = require("../../../../config")
 
 // get all employees
 exports.getEmployees = async (req, reply) => {
