@@ -69,8 +69,7 @@ exports.getSingleEmployee = async (req,reply) => {
 
 // add a new Employee
 exports.addEmployee = async (req, reply) => {
-    const {eid, name, email, phoneNumber, hire_date} = req.body
-    const {job_id, salary, department_id, manager} = req.body
+    const {name, dob, phoneNumber, address} = req.body
 
     AWS.config.update(config.aws_remote_config)
     // create a new dynamodb client which provides connectivity
@@ -82,15 +81,10 @@ exports.addEmployee = async (req, reply) => {
             TableName: config.aws_table_name,
             Item: {
                 PK: orgId, // Partition Key - `ORG#${orgId}`
-                eid: eid,
                 name: name,
-                email: email,
+                dob: dob,
                 phoneNumber: phoneNumber,
-                hire_date: hire_date,
-                job_id: job_id,
-                salary: salary,
-                department_id: department_id,
-                manager: manager
+                address: address
             }
         }
         client.put(params, function (err, data){
@@ -100,7 +94,7 @@ exports.addEmployee = async (req, reply) => {
                 console.log('data', data)
                 reply.send({
                     employee: data,
-                    message: `Employee with PK of ${orgId} and eid of ${eid} has been created`
+                    message: `Employee with PK of ${orgId} has been created`
                 })
             }
         })
@@ -111,8 +105,7 @@ exports.addEmployee = async (req, reply) => {
 
 // update an existing Employee
 exports.updateEmployee = async (req, reply) => {
-    const {eid, name, email, phoneNumber, hire_date} = req.body
-    const {job_id, salary, department_id, manager} = req.body
+    const {name, dob, phoneNumber, address} = req.body
 
     AWS.config.update(config.aws_remote_config)
     // create a new dynamodb client which provides connectivity
@@ -120,28 +113,6 @@ exports.updateEmployee = async (req, reply) => {
     const client = new AWS.DynamoDB.DocumentClient()
     const orgId = req.params.id //uuidv4()
     try{
-        if (eid !== undefined) {
-            var params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    PK: orgId // Partition Key - `ORG#${orgId}`
-                },
-                UpdateExpression: 'set #eid = :eid',
-                ExpressionAttributeNames: {'#eid': 'eid'},
-                ExpressionAttributeValues: {
-                    ':eid': eid
-                }
-            }
-            client.update(params, function (err, data){
-                if(err){
-                    console.log(err)
-                }else{
-                    reply.send({
-                        message: `Employee with PK of ${orgId} has been updated`
-                    })
-                }
-            })
-        }
         if (name !== undefined) {
             var params = {
                 TableName: config.aws_table_name,
@@ -164,16 +135,16 @@ exports.updateEmployee = async (req, reply) => {
                 }
             })
         }
-        if (email !== undefined) {
+        if (dob !== undefined) {
             var params = {
                 TableName: config.aws_table_name,
                 Key: {
                     PK: orgId // Partition Key - `ORG#${orgId}`
                 },
-                UpdateExpression: 'set #email = :email',
-                ExpressionAttributeNames: {'#email': 'email'},
+                UpdateExpression: 'set #dob = :dob',
+                ExpressionAttributeNames: {'#dob': 'dob'},
                 ExpressionAttributeValues: {
-                    ':email': email
+                    ':dob': dob
                 }
             }
             client.update(params, function (err, data){
@@ -208,104 +179,16 @@ exports.updateEmployee = async (req, reply) => {
                 }
             })
         }
-        if (hire_date !== undefined) {
+        if (address !== undefined) {
             var params = {
                 TableName: config.aws_table_name,
                 Key: {
                     PK: orgId // Partition Key - `ORG#${orgId}`
                 },
-                UpdateExpression: 'set #hire_date = :hire_date',
-                ExpressionAttributeNames: {'#hire_date': 'hire_date'},
+                UpdateExpression: 'set #address = :address',
+                ExpressionAttributeNames: {'#address': 'address'},
                 ExpressionAttributeValues: {
-                    ':hire_date': hire_date
-                }
-            }
-            client.update(params, function (err, data){
-                if(err){
-                    console.log(err)
-                }else{
-                    reply.send({
-                        message: `Employee with PK of ${orgId} has been updated`
-                    })
-                }
-            })
-        }
-        if (job_id !== undefined) {
-            var params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    PK: orgId // Partition Key - `ORG#${orgId}`
-                },
-                UpdateExpression: 'set #job_id = :job_id',
-                ExpressionAttributeNames: {'#job_id': 'job_id'},
-                ExpressionAttributeValues: {
-                    ':job_id': job_id
-                }
-            }
-            client.update(params, function (err, data){
-                if(err){
-                    console.log(err)
-                }else{
-                    reply.send({
-                        message: `Employee with PK of ${orgId} has been updated`
-                    })
-                }
-            })
-        }
-        if (salary !== undefined) {
-            var params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    PK: orgId // Partition Key - `ORG#${orgId}`
-                },
-                UpdateExpression: 'set #salary = :salary',
-                ExpressionAttributeNames: {'#salary': 'salary'},
-                ExpressionAttributeValues: {
-                    ':salary': salary
-                }
-            }
-            client.update(params, function (err, data){
-                if(err){
-                    console.log(err)
-                }else{
-                    reply.send({
-                        message: `Employee with PK of ${orgId} has been updated`
-                    })
-                }
-            })
-        }
-        if (department_id !== undefined) {
-            var params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    PK: orgId // Partition Key - `ORG#${orgId}`
-                },
-                UpdateExpression: 'set #department_id = :department_id',
-                ExpressionAttributeNames: {'#department_id': 'department_id'},
-                ExpressionAttributeValues: {
-                    ':department_id': department_id
-                }
-            }
-            client.update(params, function (err, data){
-                if(err){
-                    console.log(err)
-                }else{
-                    reply.send({
-                        message: `Employee with PK of ${orgId} has been updated`
-                    })
-                }
-            })
-        }
-        if (manager !== undefined) {
-            var params = {
-                TableName: config.aws_table_name,
-                Key: {
-                    PK: orgId // Partition Key - `ORG#${orgId}`
-                },
-                UpdateExpression: 'set #manager = :manager',
-                ExpressionAttributeNames: {'#manager': 'manager'},
-                ExpressionAttributeValues: {
-                    ':manager': manager
+                    ':address': address
                 }
             }
             client.update(params, function (err, data){
