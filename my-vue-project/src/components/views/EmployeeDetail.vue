@@ -61,7 +61,7 @@
     </form>
     <br>
 
-    <button type="submit" class="btn btn-primary" style="background: lawngreen"
+    <button type="submit" class="btn btn-primary" style="background: green"
             @click="updateEmployee"
     >
       Update

@@ -26,8 +26,7 @@ export default {
 }
 </script>
 
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+<style>
 * {
   box-sizing: border-box;
   margin: 0;
@@ -45,6 +44,9 @@ export default {
   border-left: 1px ;
   padding-left: 10px;
   padding-right: 10px;
+}
+h1{
+  text-align: center;
 }
 p{
   font-weight: bold;
