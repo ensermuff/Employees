@@ -1,6 +1,6 @@
 <template>
   <div class="list row" style="margin: auto">
-    <h1>Employees</h1>
+    <h1>Employee Details</h1>
 
     <table className="table table-hover">
       <thead>
