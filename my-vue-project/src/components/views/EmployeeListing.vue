@@ -1,5 +1,5 @@
 <template>
-  <div class="list row">
+  <div class="list row" style="margin: auto">
     <h1>Employees</h1>
 
     <table className="table table-hover">
@@ -21,8 +21,8 @@
 <!--        <td>{{ employee.phoneNumber }}</td>-->
 <!--        <td>{{ employee.address }}</td>-->
         <td>
-          <router-link to="{name: 'Details', params: { PK: employee.PK}}" className="btn btn-primary">Details
-          </router-link>
+          <router-link :to ="'/api/employee/' + employee.PK"
+                       className="btn btn-primary">Details</router-link>
         </td>
       </tr>
       </tbody>

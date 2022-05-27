@@ -1,8 +1,8 @@
 <template>
-  <div class="list row">
-    <h1>Employee</h1>
+  <div class="list row" style="margin: auto">
+    <h1>Employees</h1>
 
-    <table class="table table-hover">
+    <table className="table table-hover">
       <thead>
       <tr>
         <td>PK</td>
@@ -14,18 +14,24 @@
       </thead>
 
       <tbody>
-      <tr v-for="employee in currentEmployee" v-bind:key="employee.PK">
-        <td>{{ employee.PK }}</td>
-        <td>{{ employee.name }}</td>
-        <td>{{ employee.dob }}</td>
-        <td>{{ employee.phoneNumber }}</td>
-        <td>{{ employee.address }}</td>
-<!--        <td><router-link to="`/employee/${{employee.PK}}`" class="btn btn-warning">Delete</router-link> </td>-->
+      <tr>
+<!--      <tr v-for="employee in currentEmployee" v-bind:key="currentEmployee.PK">-->
+        <td>{{ currentEmployee.PK }}</td>
+        <td>{{ currentEmployee.name }}</td>
+        <td>{{ currentEmployee.dob }}</td>
+        <td>{{ currentEmployee.phoneNumber }}</td>
+        <td>{{ currentEmployee.address }}</td>
+        <td>
+          <router-link to="{name: 'Details', params: { PK: ${{currentEmployee.PK}}}}" className="btn btn-primary" style="background: red"
+                       @click="deleteEmployee">Delete
+          </router-link>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
-  <div v-if="currentEmployee" class="edit-form" style="margin-top: 100px">
+  <!--        <td><router-link to="`/employee/${{employee.PK}}`" class="btn btn-warning">Delete</router-link> </td>-->
+  <div v-if="currentEmployee" class="edit-form" style="margin-top: 100px; margin-bottom: 100px">
     <h4>Update Employee</h4>
     <form>
       <div class="form-group">
@@ -52,28 +58,10 @@
                v-model="currentEmployee.address"
         />
       </div>
-      <div class="form-group">
-        <label><strong>Status:</strong></label>
-        {{ currentEmployee.published ? "Published" : "Pending" }}
-      </div>
     </form>
-    <button class="badge badge-primary mr-2"
-            v-if="currentEmployee.published"
-            @click="updatePublished(false)"
-    >
-      UnPublish
-    </button>
-    <button v-else class="badge badge-primary mr-2" style="background: cornflowerblue"
-            @click="updatePublished(true)"
-    >
-      Publish
-    </button>
-    <button class="badge badge-danger mr-2" style="background: red"
-            @click="deleteEmployee"
-    >
-      Delete
-    </button>
-    <button type="submit" class="badge badge-success" style="background: lawngreen"
+    <br>
+
+    <button type="submit" class="btn btn-primary" style="background: lawngreen"
             @click="updateEmployee"
     >
       Update
@@ -91,35 +79,41 @@ export default {
   name: "EmployeeDetail",
   data() {
     return {
-      currentEmployee: null,
+      currentEmployee: [],
       message: ''
     };
   },
   methods: {
+    // retrieveEmployees() {
+    //   const vm = this;
+    //   EmployeeDataService.getAll()
+    //       .then(response => {
+    //         vm.currentEmployee = response.data.currentEmployee;
+    //         console.log(response.data);
+    //       })
+    //       .catch(e => {
+    //         console.log(e);
+    //       });
+    // },
     getEmployee(id) {
+      const vm = this
       EmployeeDataService.get(id)
           .then(response => {
-            this.currentEmployee = response.data.employees;
+            vm.currentEmployee = response.data.employees[0];
+            // console.log(vm.currentEmployee.employees[0].PK)
+            console.log(vm.currentEmployee.PK)
             console.log(response.data);
           })
           .catch(e => {
             console.log(e);
           });
     },
-    updatePublished(status) {
-      var data = {
-        PK: this.currentEmployee.PK,
-        name: this.currentEmployee.name,
-        dob: this.currentEmployee.dob,
-        phoneNumber: this.currentEmployee.phoneNumber,
-        address: this.currentEmployee.address,
-        published: status
-      };
-      EmployeeDataService.update(this.currentEmployee.id, data)
+    deleteEmployee() {
+      EmployeeDataService.delete(this.currentEmployee.PK)
           .then(response => {
             console.log(response.data);
-            this.currentEmployee.published = status;
-            this.message = 'The status was updated successfully!';
+            this.currentEmployee = null
+            this.$router.push({ name: "ListEmployees" });
           })
           .catch(e => {
             console.log(e);
@@ -128,18 +122,8 @@ export default {
     updateEmployee() {
       EmployeeDataService.update(this.currentEmployee.PK, this.currentEmployee)
           .then(response => {
-            console.log(response.data.currentEmployee);
-            this.message = 'The tutorial was updated successfully!';
-          })
-          .catch(e => {
-            console.log(e);
-          });
-    },
-    deleteEmployee() {
-      EmployeeDataService.delete(this.currentEmployee.id)
-          .then(response => {
             console.log(response.data);
-            this.$router.push({ name: "tutorials" });
+            this.message = 'The employee was updated successfully!';
           })
           .catch(e => {
             console.log(e);
@@ -148,7 +132,9 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.getEmployee(this.$route.params.PK);
+    console.log(this.$route.params.id)
+    // this.retrieveEmployees();
+    this.getEmployee(this.$route.params.id);
     console.log('Components mounted.')
 
   }
